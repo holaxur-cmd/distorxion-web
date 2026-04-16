@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PISO INTERACTIVO — CAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #07070d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+      user-select: none;
+    }
+
+    #scene {
+      position: relative;
+      width: min(92vw, 92vh);
+      height: min(92vw, 92vh);
+    }
+
+    canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+      display: block;
+    }
+
+    #c-bg    { z-index: 0; }
+    #c-main  { z-index: 1; }
+    #c-ui    { z-index: 2; pointer-events: none; }
+    #c-top   { z-index: 3; }
+
+    .tag {
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 100;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.18);
+      white-space: nowrap;
+    }
+
+    .hint {
+      position: absolute;
+      top: -34px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 100;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.12);
+      white-space: nowrap;
+      transition: opacity 1s;
+    }
+  </style>
+</head>
+<body>
+  <div id="scene">
+    <canvas id="c-bg"></canvas>
+    <canvas id="c-main"></canvas>
+    <canvas id="c-ui"></canvas>
+    <canvas id="c-top"></canvas>
+    <div class="hint" id="hint">mové el cursor sobre el piso</div>
+    <div class="tag">piso interactivo — cai</div>
+  </div>
+
+<script>
+// ────────────────────────────────────────────────────────────────
+//  Canvas setup
+// ────────────────────────────────────────────────────────────────
+const scene  = document.getElementById('scene');
+const bgCvs  = document.getElementById('c-bg');
+const mnCvs  = document.getElementById('c-main');
+const uiCvs  = document.getElementById('c-ui');
+const tpCvs  = document.getElementById('c-top');
+const bgCtx  = bgCvs.getContext('2d');
+const mnCtx  = mnCvs.getContext('2d');
+const uiCtx  = uiCvs.getContext('2d');
+const tpCtx  = tpCvs.getContext('2d');
+
+let W = 0, H = 0;
+
+function resize() {
+  const r = scene.getBoundingClientRect();
+  W = Math.round(r.width);
+  H = Math.round(r.height);
+  [bgCvs, mnCvs, uiCvs, tpCvs].forEach(c => { c.width = W; c.height = H; });
+  drawBg();
+}
+
+// ────────────────────────────────────────────────────────────────
+//  Background — deep dark mattress
+// ────────────────────────────────────────────────────────────────
+function drawBg() {
+  // Base gradient
+  const g = bgCtx.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0,   '#0b0b14');
+  g.addColorStop(0.4, '#0d0d1a');
+  g.addColorStop(1,   '#090910');
+  bgCtx.fillStyle = g;
+  bgCtx.fillRect(0, 0, W, H);
+
+  // Faint textile weave
+  bgCtx.save();
+  bgCtx.globalAlpha = 0.025;
+  bgCtx.strokeStyle = '#b0c0ff';
+  bgCtx.lineWidth   = 0.4;
+  const step = 32;
+  for (let x = 0; x <= W; x += step) { bgCtx.beginPath(); bgCtx.moveTo(x,0); bgCtx.lineTo(x,H); bgCtx.stroke(); }
+  for (let y = 0; y <= H; y += step) { bgCtx.beginPath(); bgCtx.moveTo(0,y); bgCtx.lineTo(W,y); bgCtx.stroke(); }
+  bgCtx.restore();
+
+  // Vignette
+  const v = bgCtx.createRadialGradient(W*.5, H*.5, W*.15, W*.5, H*.5, W*.78);
+  v.addColorStop(0, 'rgba(0,0,0,0)');
+  v.addColorStop(1, 'rgba(0,0,5,0.72)');
+  bgCtx.fillStyle = v;
+  bgCtx.fillRect(0, 0, W, H);
+}
+
+// ────────────────────────────────────────────────────────────────
+//  Feather — drawn individually each frame with lifecycle alpha
+// ────────────────────────────────────────────────────────────────
+const MAX_F = 100;
+const feathers = [];
+
+// Palette: pure whites and warm ivories only — no blue residue
+const PAL = [
+  [255, 255, 255],   // pure white
+  [255, 252, 245],   // warm white
+  [255, 250, 235],   // ivory
+  [250, 255, 252],   // crisp white
+  [255, 248, 240],   // creamy white
+  [252, 252, 255],   // neutral white
+];
+
+class Feather {
+  constructor(x, y, burst) {
+    // Spawn with slight scatter
+    this.ox = x + (Math.random() - .5) * 40;
+    this.oy = y + (Math.random() - .5) * 40;
+    this.x  = this.ox;
+    this.y  = this.oy;
+
+    // Motion — gentle float upward + lateral sway
+    const spd = burst
+      ? 0.5 + Math.random() * 1.4
+      : 0.2 + Math.random() * 0.5;
+
+    const ang = -Math.PI * .5 + (Math.random() - .5) * Math.PI * .9;
+    this.vx  = Math.cos(ang) * spd;
+    this.vy  = Math.sin(ang) * spd;
+    this.ax  = (Math.random() - .5) * 0.006;  // drift acceleration
+    this.ay  = 0.004 + Math.random() * 0.004;  // soft gravity
+
+    // Pendulum-like sway
+    this.phase = Math.random() * Math.PI * 2;
+    this.freq  = 0.018 + Math.random() * 0.022;
+    this.swayAmp = 0.012 + Math.random() * 0.018;
+
+    // Rotation
+    this.rot  = Math.random() * Math.PI * 2;
+    this.rotV = (Math.random() - .5) * 0.025;
+
+    // Dimensions — slender feather
+    this.len = (burst ? 14 : 9) + Math.random() * 20;
+    this.asp = 0.14 + Math.random() * 0.09;   // aspect (width/length)
+
+    // Color
+    const c  = PAL[Math.floor(Math.random() * PAL.length)];
+    this.rgb = c;
+
+    // Lifecycle
+    this.life    = 0;
+    this.maxLife = 150 + Math.random() * 200;
+    this.maxA    = 0.60 + Math.random() * 0.35;
+    this.alpha   = 0;
+
+    // Curl: side-barbule offset
+    this.curl = (Math.random() - .5) * 0.4;
+  }
+
+  update() {
+    this.life++;
+    const t = this.life / this.maxLife;
+
+    // Smooth envelope: ease-in then ease-out
+    if (t < 0.12) {
+      this.alpha = this.maxA * easeOut(t / 0.12);
+    } else if (t > 0.65) {
+      this.alpha = this.maxA * easeOut((1 - t) / 0.35);
+    } else {
+      this.alpha = this.maxA;
+    }
+
+    // Pendulum sway on X
+    this.phase += this.freq;
+    this.vx    += Math.sin(this.phase) * this.swayAmp + this.ax;
+    this.vy    += this.ay;
+
+    // Drag
+    this.vx *= 0.992;
+    this.vy *= 0.992;
+
+    this.x  += this.vx;
+    this.y  += this.vy;
+    this.rot += this.rotV;
+
+    return this.life < this.maxLife;
+  }
+
+  draw(ctx) {
+    const l  = this.len;
+    const w  = l * this.asp;
+    const [r, g, b] = this.rgb;
+
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rot);
+    ctx.globalAlpha = this.alpha;
+
+    // ── Vane: teardrop shape composed of two bezier arcs ──
+    ctx.beginPath();
+    // tip → base (right side)
+    ctx.moveTo(0, -l * 0.5);
+    ctx.bezierCurveTo(
+      w * (1 + this.curl),  -l * 0.15,
+      w * (0.8 + this.curl), l * 0.3,
+      0,  l * 0.5
+    );
+    // base → tip (left side)
+    ctx.bezierCurveTo(
+      -w * (0.8 - this.curl), l * 0.3,
+      -w * (1 - this.curl),  -l * 0.15,
+      0, -l * 0.5
+    );
+    ctx.closePath();
+
+    // Soft radial fill - bright luminous center, gentle fade
+    const grd = ctx.createRadialGradient(0, -l*0.1, 0, 0, l*.05, l*.55);
+    grd.addColorStop(0,   `rgba(${r},${g},${b},1.0)`);
+    grd.addColorStop(0.25,`rgba(${r},${g},${b},0.70)`);
+    grd.addColorStop(0.6, `rgba(${r},${g},${b},0.20)`);
+    grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+    ctx.fillStyle = grd;
+    ctx.fill();
+
+    // ── Quill: thin central stem ──
+    ctx.beginPath();
+    ctx.moveTo(0, -l * 0.5);
+    ctx.lineTo(0,  l * 0.5);
+    ctx.strokeStyle = `rgba(${r},${g},${b},0.70)`;
+    ctx.lineWidth   = 0.5;
+    ctx.stroke();
+
+    // ── Barbules: tiny side strokes for realism ──
+    ctx.lineWidth = 0.4;
+    ctx.strokeStyle = `rgba(${r},${g},${b},0.35)`;
+    const barbs = 5;
+    for (let i = -barbs; i <= barbs; i++) {
+      const py = (i / barbs) * l * 0.45;
+      const blen = w * (1 - Math.abs(i / barbs) * 0.4) * (i < 0 ? 1.05 : 0.85);
+      ctx.beginPath();
+      ctx.moveTo(0, py);
+      ctx.lineTo( blen * (1 + this.curl * .5), py - blen * 0.25);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, py);
+      ctx.lineTo(-blen * (1 - this.curl * .5), py - blen * 0.25);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+}
+
+function easeOut(t) { return 1 - Math.pow(1 - t, 2); }
+
+// ────────────────────────────────────────────────────────────────
+//  Ripple
+// ────────────────────────────────────────────────────────────────
+const ripples = [];
+
+class Ripple {
+  constructor(x, y, big = false) {
+    this.x    = x; this.y = y;
+    this.maxR = big ? 80 + Math.random()*30 : 38 + Math.random()*18;
+    this.r    = 1;
+    this.life = 0;
+    this.maxLife = big ? 80 : 55;
+  }
+  update() { this.life++; this.r = (this.life/this.maxLife) * this.maxR; return this.life < this.maxLife; }
+  draw(ctx) {
+    const t = this.life / this.maxLife;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+    ctx.strokeStyle = `rgba(255,255,255,${(1-t)*0.18})`;
+    ctx.lineWidth   = (1-t) * 1.4;
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+// ────────────────────────────────────────────────────────────────
+//  Pressure glow — follows pointer
+// ────────────────────────────────────────────────────────────────
+const glow = {
+  x: 0, y: 0, tx: 0, ty: 0,
+  r: 0, maxR: 100,
+  alpha: 0, targetAlpha: 0,
+
+  show(x, y) { this.tx=x; this.ty=y; this.targetAlpha=0.13; this.maxR=90; },
+  move(x, y) { this.tx=x; this.ty=y; },
+  hide()     { this.targetAlpha=0; this.maxR=0; },
+
+  update() {
+    this.x     += (this.tx - this.x)    * 0.09;
+    this.y     += (this.ty - this.y)    * 0.09;
+    this.r     += (this.maxR - this.r)  * 0.06;
+    this.alpha += (this.targetAlpha - this.alpha) * 0.06;
+  },
+  draw(ctx) {
+    if (this.alpha < 0.003 || this.r < 1) return;
+    // Neutral warm white glow — no blue cast
+    const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+    g.addColorStop(0,   `rgba(255,252,245,${this.alpha})`);
+    g.addColorStop(0.4, `rgba(240,235,225,${this.alpha*0.3})`);
+    g.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+    ctx.fill();
+  }
+};
+
+// ────────────────────────────────────────────────────────────────
+//  Input handling
+// ────────────────────────────────────────────────────────────────
+let lastX = -1, lastY = -1, lastT = 0, active = false;
+const hint = document.getElementById('hint');
+let hinted = false;
+
+function pos(e) {
+  const rect = tpCvs.getBoundingClientRect();
+  const sx = W / rect.width, sy = H / rect.height;
+  if (e.touches) {
+    const t = e.touches[0];
+    return [(t.clientX - rect.left) * sx, (t.clientY - rect.top) * sy];
+  }
+  return [(e.clientX - rect.left) * sx, (e.clientY - rect.top) * sy];
+}
+
+function onMove(e) {
+  e.preventDefault();
+  const [x, y] = pos(e);
+  const now = performance.now();
+  const dt  = Math.max(now - lastT, 1);
+  const dx  = x - lastX, dy = y - lastY;
+  const vel = Math.sqrt(dx*dx + dy*dy) / dt;
+
+  if (!hinted) { hint.style.opacity = '0'; hinted = true; }
+
+  glow.move(x, y);
+
+  const v = Math.min(vel * 80, 1);
+  if (v > 0.04 && feathers.length < MAX_F) {
+    const n = Math.floor(1 + v * 2.5);
+    for (let i = 0; i < n; i++) feathers.push(new Feather(x, y, false));
+    if (Math.random() < 0.3) ripples.push(new Ripple(x, y, false));
+  }
+
+  lastX = x; lastY = y; lastT = now;
+}
+
+function onDown(e) {
+  e.preventDefault();
+  active = true;
+  const [x, y] = pos(e);
+  lastX = x; lastY = y; lastT = performance.now();
+  glow.show(x, y);
+
+  // Burst of feathers on press
+  const burst = Math.min(6, MAX_F - feathers.length);
+  for (let i = 0; i < burst; i++) feathers.push(new Feather(x, y, true));
+  ripples.push(new Ripple(x, y, true));
+  setTimeout(() => ripples.push(new Ripple(x, y, false)), 100);
+}
+
+function onUp() {
+  active = false;
+  glow.hide();
+}
+
+tpCvs.addEventListener('mousemove',  onMove, { passive: false });
+tpCvs.addEventListener('mousedown',  onDown, { passive: false });
+tpCvs.addEventListener('mouseup',    onUp);
+tpCvs.addEventListener('mouseleave', onUp);
+tpCvs.addEventListener('touchmove',  onMove, { passive: false });
+tpCvs.addEventListener('touchstart', onDown, { passive: false });
+tpCvs.addEventListener('touchend',   onUp);
+
+// ────────────────────────────────────────────────────────────────
+//  Render loop
+// ────────────────────────────────────────────────────────────────
+function render() {
+  // Main canvas — full clear each frame (feathers drawn fresh with their alpha)
+  mnCtx.clearRect(0, 0, W, H);
+
+  // UI canvas — ripples & glow
+  uiCtx.clearRect(0, 0, W, H);
+
+  // Update & draw glow
+  glow.update();
+  glow.draw(uiCtx);
+
+  // Ripples
+  for (let i = ripples.length - 1; i >= 0; i--) {
+    if (!ripples[i].update()) { ripples.splice(i, 1); continue; }
+    ripples[i].draw(uiCtx);
+  }
+
+  // Feathers — each has its own alpha lifecycle, no ghosting
+  for (let i = feathers.length - 1; i >= 0; i--) {
+    if (!feathers[i].update()) { feathers.splice(i, 1); continue; }
+    feathers[i].draw(mnCtx);
+  }
+
+  requestAnimationFrame(render);
+}
+
+// ────────────────────────────────────────────────────────────────
+//  Ambient: 1-2 idle feathers appear slowly on a quiet surface
+// ────────────────────────────────────────────────────────────────
+setInterval(() => {
+  if (!active && feathers.length < 8) {
+    const x = W * 0.12 + Math.random() * W * 0.76;
+    const y = H * 0.12 + Math.random() * H * 0.76;
+    feathers.push(new Feather(x, y, false));
+  }
+}, 1800);
+
+// ────────────────────────────────────────────────────────────────
+//  Init
+// ────────────────────────────────────────────────────────────────
+window.addEventListener('resize', resize);
+resize();
+render();
+</script>
+</body>
+</html>
