@@ -173,22 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
             service: "LASER PERFORMANCE, LIVE AUDIO",
             location: "DESEO BSAS",
             media: [
-                "assets/portfolio/mutek_argentina/C1739_02790044-min.mp4",
-                "assets/portfolio/mutek_argentina/C1756_02805836-min.mp4",
-                "assets/portfolio/mutek_argentina/C1781_02825636-min.mp4",
-                "assets/portfolio/mutek_argentina/C1785_02830100-min.mp4",
-                "assets/portfolio/mutek_argentina/C1794_02835284-min.mp4",
                 "assets/portfolio/mutek_argentina/C1799_02838524-min.mp4",
-                "assets/portfolio/mutek_argentina/C1804_02842964-min.mp4",
-                "assets/portfolio/mutek_argentina/C1807_02844836-min.mp4",
-                "assets/portfolio/mutek_argentina/C1811_02848028-min.mp4",
-                "assets/portfolio/mutek_argentina/C1819_02854004-min.mp4",
-                "assets/portfolio/mutek_argentina/C1823_02856836-min.mp4",
                 "assets/portfolio/mutek_argentina/C1825_02858924-min.mp4",
-                "assets/portfolio/mutek_argentina/C1837_02866292-min.mp4",
                 "assets/portfolio/mutek_argentina/C1845_02872772-min.mp4",
-                "assets/portfolio/mutek_argentina/C1848_02875724-min.mp4",
-                "assets/portfolio/mutek_argentina/C1859_02888780-min.mp4",
                 "assets/portfolio/mutek_argentina/DSC09796-min.jpg",
                 "assets/portfolio/mutek_argentina/mutek_1-min.jpg",
                 "assets/portfolio/mutek_argentina/utopia_1-min.jpg"
@@ -269,9 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
             date: "2026",
             service: "LIGHTING DESIGN, VFX, LASER PERFORMANCE",
             location: "UNO MÁS UNO",
-            media: [
-                "https://youtu.be/1wU2jzRpEO0"
-            ]
+            media: ["https://youtu.be/1wU2jzRpEO0"]
         },
         innervisions: {
             title: "INNERVISIONS | DIXON & TRIKK",
@@ -306,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mediaList = Array.isArray(data.media) ? data.media : (data.media ? [data.media] : []);
         
         const galleryItems = mediaList.map((src, index) => {
-            const isVideo = src.toLowerCase().endsWith('.mp4') || src.toLowerCase().endsWith('.mov');
+            const isVideo = src.toLowerCase().endsWith('.mp4') || src.toLowerCase().endsWith('.mov') || src.toLowerCase().endsWith('.webm');
             const isYoutube = src.includes('youtube.com') || src.includes('youtu.be');
             const delay = index * 0.1;
 
@@ -436,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Close buttons for modal (keeping as placeholder if needed for other things)
+    // Close buttons for modal
     const modal = document.getElementById('project-modal');
     const closeBtns = [document.getElementById('modal-close'), document.getElementById('modal-close-btn')];
     closeBtns.forEach(btn => btn && btn.addEventListener('click', () => {
@@ -467,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     applyProximityEffect();
 
-    // Lang Switcher (desktop + mobile in sync)
+    // Lang Switcher
     const langBtn = document.getElementById('lang-toggle');
     const langBtnMobile = document.getElementById('lang-toggle-mobile');
     let currentLang = 'es';
@@ -485,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (langBtn) langBtn.addEventListener('click', switchLang);
     if (langBtnMobile) langBtnMobile.addEventListener('click', switchLang);
 
-    // Mobile Menu Overlay
+    // Mobile Menu
     const toggle = document.getElementById('menu-toggle');
     const mobileOverlay = document.getElementById('mobile-menu-overlay');
 
@@ -509,7 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Tab Navigation System (Supports Menu & CTA buttons — desktop + mobile)
+    // Navigation
     const sections = document.querySelectorAll('section');
     const navButtons = document.querySelectorAll('.nav-link');
     const allTabLinks = document.querySelectorAll('a[href^="#"]');
@@ -522,33 +507,26 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetSection) {
                 e.preventDefault();
                 
-                // Hide all sections
                 sections.forEach(s => s.classList.remove('active'));
                 navButtons.forEach(b => b.classList.remove('active'));
 
-                // Show target section
                 targetSection.classList.add('active');
                 
-                // Highlight the matching menu button if it exists
                 const matchingNavBtn = document.querySelector(`.nav-link[href="#${targetId}"]`);
                 if (matchingNavBtn) matchingNavBtn.classList.add('active');
 
-                // Re-trigger reveal animations for this section
                 targetSection.querySelectorAll('[data-reveal]').forEach((el, index) => {
                     el.classList.remove('revealed');
-                    void el.offsetWidth; // Trigger reflow
+                    void el.offsetWidth;
                     setTimeout(() => el.classList.add('revealed'), index * 150);
                 });
 
-                // Scroll to top
                 window.scrollTo({ top: 0, behavior: 'instant' });
 
-                // If info section, trigger stats
                 if (targetId === 'about') {
                     triggerStats();
                 }
 
-                // Close mobile menu if open
                 closeMenu();
             }
         });
@@ -571,7 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Contact Form & System Log
+    // Contact Form
     const contactForm = document.getElementById('contact-form');
     const systemLog = document.getElementById('system-log');
     const formFeedback = document.getElementById('form-feedback');
@@ -590,14 +568,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const btn = contactForm.querySelector('button');
             const originalText = btn.textContent;
 
-            // Collect form data
             const name    = contactForm.querySelector('input[name="name"]').value.trim();
             const email   = contactForm.querySelector('input[name="email"]').value.trim();
             const type    = contactForm.querySelector('select[name="type"]').value;
             const date    = contactForm.querySelector('input[name="date"]').value;
             const message = contactForm.querySelector('textarea[name="message"]').value.trim();
 
-            // Build mailto body
             const typeLabels = {
                 visuals: 'VISUALES / VJ',
                 stage: 'DISEÑO DE ESCENARIO',
@@ -621,7 +597,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const encodedBody = encodeURIComponent(body);
             const mailtoUrl = `mailto:distorxion.contacto@gmail.com?subject=${subject}&body=${encodedBody}`;
 
-            // Animate system log
             btn.disabled = true;
             btn.textContent = 'TRANSMITTING...';
             addLog('INITIATING DATA UPLOAD...');
@@ -639,7 +614,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     : 'OPENING MAIL CLIENT...';
                 formFeedback.className = 'form-feedback success';
 
-                // Open mail client
                 window.location.href = mailtoUrl;
 
                 contactForm.reset();
