@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISTORXION — Estudio Tecnológico Creativo</title>
+    <meta name="description"
+        content="Estudio tecnológico creativo especializado en diseño interactivo, láseres, video e iluminación.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><circle cx='5' cy='5' r='4' fill='white'/></svg>">
+</head>
+
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+
+    <!-- Loader (Solo línea blanca) -->
+    <div class="loader" id="loader">
+        <div class="loader-bar">
+            <div class="loader-progress" id="loader-progress"></div>
+        </div>
+    </div>
+
+    <!-- Landing Splash (Interactivo - El logo es el botón) -->
+    <div class="landing-splash" id="landing-splash">
+        <canvas class="splash-canvas" id="splash-canvas"></canvas>
+        <div class="splash-content">
+            <div class="splash-logo-container" id="splash-enter-zone">
+                <img src="assets/logo.png" alt="Distorxion" class="splash-logo" id="splash-logo">
+            </div>
+            <div class="splash-hint" id="splash-hint" data-es="CLICK PARA ENTRAR" data-en="CLICK TO ENTER">CLICK PARA ENTRAR</div>
+            <div class="splash-hint-mobile" id="splash-hint-mobile">TAP PARA ENTRAR</div>
+        </div>
+    </div>
+
+    <!-- Navigation (Conventional Top) -->
+    <nav class="nav" id="nav">
+        <div class="nav-logo">
+            <a href="#hero">
+                <img src="assets/logo.png" alt="Distorxion" class="nav-logo-img">
+            </a>
+        </div>
+        
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#hero" class="nav-link active" data-section="hero" data-es="INICIO" data-en="HOME">INICIO</a></li>
+            <li><a href="#portfolio" class="nav-link" data-section="portfolio" data-es="PORTFOLIO" data-en="PORTFOLIO">PORTFOLIO</a></li>
+            <li><a href="#about" class="nav-link" data-section="about" data-es="INFO" data-en="INFO">INFO</a></li>
+            <li><a href="#shop" class="nav-link" data-section="shop" data-es="SHOP" data-en="SHOP">SHOP</a></li>
+            <li><a href="#contact" class="nav-link" data-section="contact" data-es="CONTACTO" data-en="CONTACT">CONTACTO</a></li>
+        </ul>
+
+        <div class="nav-social">
+            <div class="nav-lang">
+                <button id="lang-toggle" class="lang-btn">EN</button>
+            </div>
+            <a href="https://www.instagram.com/distorxion___/" target="_blank" rel="noopener">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="2" y="2" width="20" height="20" rx="5" />
+                    <circle cx="12" cy="12" r="5" />
+                    <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+                </svg>
+            </a>
+            <a href="https://www.youtube.com/@DISTORXXXION" target="_blank" rel="noopener">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path>
+                    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+                </svg>
+            </a>
+        </div>
+
+        <div class="nav-menu-toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay">
+        <div class="mobile-menu-inner">
+            <nav class="mobile-menu-nav">
+                <a href="#hero" class="mobile-nav-link" data-section="hero" data-es="INICIO" data-en="HOME">INICIO</a>
+                <a href="#portfolio" class="mobile-nav-link" data-section="portfolio" data-es="PORTFOLIO" data-en="PORTFOLIO">PORTFOLIO</a>
+                <a href="#about" class="mobile-nav-link" data-section="about" data-es="INFO" data-en="INFO">INFO</a>
+                <a href="#shop" class="mobile-nav-link" data-section="shop" data-es="SHOP" data-en="SHOP">SHOP</a>
+                <a href="#contact" class="mobile-nav-link" data-section="contact" data-es="CONTACTO" data-en="CONTACT">CONTACTO</a>
+            </nav>
+            <div class="mobile-menu-footer">
+                <button id="lang-toggle-mobile" class="lang-btn">EN</button>
+                <a href="https://www.instagram.com/distorxion___/" target="_blank" rel="noopener" class="mobile-social-link">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="2" y="2" width="20" height="20" rx="5" />
+                        <circle cx="12" cy="12" r="5" />
+                        <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+                    </svg>
+                </a>
+                <a href="https://www.youtube.com/@DISTORXXXION" target="_blank" rel="noopener" class="mobile-social-link">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path>
+                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero active" id="hero">
+            <canvas class="hero-canvas" id="hero-canvas"></canvas>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <div class="hero-subtitle" data-reveal data-es="ESTUDIO TECNOLÓGICO CREATIVO"
+                    data-en="CREATIVE TECHNOLOGY STUDIO">ESTUDIO TECNOLÓGICO CREATIVO</div>
+                <h1 class="hero-title" data-reveal>
+                    <span class="slice-text" data-text="DISTORXION">DISTORXION</span>
+                </h1>
+                <p class="hero-description" data-reveal data-es="Diseño interactivo · Láseres · Video · Iluminación"
+                    data-en="Interactive Design · Lasers · Video · Lighting">Diseño interactivo · Láseres · Video ·
+                    Iluminación</p>
+                <a href="#portfolio" class="hero-cta" data-reveal>
+                    <span data-es="EXPLORAR PROYECTOS" data-en="EXPLORE PROJECTS">EXPLORAR PROYECTOS</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17L17 7M17 7H7M17 7V17" />
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- Projects Registry Section -->
+        <section class="portfolio" id="portfolio">
+            <div class="section-header" data-reveal>
+                <div class="tech-id">[PROJ_REGISTRY_01]</div>
+                <span class="section-number">01</span>
+                <h2 class="section-title" data-es="PROYECTOS" data-en="PROJECTS">PROYECTOS</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="portfolio-container" data-reveal>
+                <table class="portfolio-table">
+                    <colgroup>
+                        <col style="width: 30%">
+                        <col style="width: 35%">
+                        <col style="width: 22%">
+                        <col style="width: 13%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="row-project" data-es="PROYECTO" data-en="PROJECT">PROYECTO</th>
+                            <th class="row-service" data-es="SERVICIO" data-en="SERVICE">SERVICIO</th>
+                            <th class="row-where" data-es="INSTALACIÓN" data-en="WHERE">INSTALACIÓN</th>
+                            <th class="row-when" data-es="FECHA" data-en="WHEN">FECHA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="portfolio-row" data-id="john_digweed">
+                            <td class="row-project">JOHN DIGWEED | MARTIN GARCIA</td>
+                            <td class="row-service">LIGHTING DESIGN, VISUALS, TOUCHDESIGNER</td>
+                            <td class="row-where">AMERIKA BSAS</td>
+                            <td class="row-when">2025</td>
+                        </tr>
+                        <tr class="portfolio-row" data-id="mutek_argentina">
+                            <td class="row-project">MUTEK ARGENTINA</td>
+                            <td class="row-service">LASER PERFORMANCE, LIVE AUDIO</td>
+                            <td class="row-where">DESEO BSAS</td>
+                            <td class="row-when">2025</td>
+                        </tr>
+                        <tr class="portfolio-row" data-id="innervisions">
+                            <td class="row-project">INNERVISIONS | DIXON & TRIKK</td>
+                            <td class="row-service">SCREEN INTERVENTION, CURATION</td>
+                            <td class="row-where">AMERIKA BSAS</td>
+                            <td class="row-when">2025</td>
+                        </tr>
+                        <tr class="portfolio-row" data-id="underclub_t3r">
+                            <td class="row-project">UNDERCLUB T3R</td>
+                            <td class="row-service">IMMERSIVE VISUAL DESIGN, LASER PERFORMANCE</td>
+                            <td class="row-where">UNDERCLUB</td>
+                            <td class="row-when">2024</td>
+                        </tr>
+                        <tr class="portfolio-row" data-id="lixis_behind_me">
+                            <td class="row-project">LIXIS / BEHIND ME</td>
+                            <td class="row-service">LIGHT AND LASER INSTALLATION</td>
+                            <td class="row-where">FRIDA</td>
+                            <td class="row-when">2024</td>
+                        </tr>
+                        <tr class="portfolio-row" data-id="experimental_01">
+                            <td class="row-project">EXPERIMENTAL 01</td>
+                            <td class="row-service">LASER EXPLORATIONS, CREATIVE TECH</td>
+                            <td class="row-where">UNDERCLUB</td>
+                            <td class="row-when">2024</td>
+                        </tr>
+                        <tr class="portfolio-row" data-id="0800">
+                            <td class="row-project">0800 COLLECTIVE</td>
+                            <td class="row-service">LASER PERFORMANCE, MAPPING</td>
+                            <td class="row-where">HIPODROMO</td>
+                            <td class="row-when">2025</td>
+                        </tr>
+                        <tr class="portfolio-row" data-id="flash">
+                            <td class="row-project">FLASH</td>
+                            <td class="row-service">LIGHT INTERVENTION, SYNC</td>
+                            <td class="row-where">PRIVATE</td>
+                            <td class="row-when">2024</td>
+                        </tr>
+                        <tr class="portfolio-row" data-id="comite_357_mutek">
+                            <td class="row-project">COMITE 357 | MUTEK</td>
+                            <td class="row-service">LASER SYNC, SOUND & LIGHTING</td>
+                            <td class="row-where">COMITE 357</td>
+                            <td class="row-when">2025</td>
+                        </tr>
+                        <tr class="portfolio-row" data-id="impulso">
+                            <td class="row-project">IMPULSO</td>
+                            <td class="row-service">LIGHTING DESIGN, VFX, LASER PERFORMANCE</td>
+                            <td class="row-where">UNO MÁS UNO</td>
+                            <td class="row-when">2026</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="tech-detail-small">S/N 48-1588F | DATASTREAM_ACCESS_GRANTED</div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about" id="about">
+            <div class="section-header" data-reveal>
+                <span class="section-number">02</span>
+                <h2 class="section-title" data-es="SOBRE NOSOTROS" data-en="ABOUT US">SOBRE NOSOTROS</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="about-container">
+                <div class="about-intro" data-reveal>
+                    <p class="about-main-text"
+                        data-es="Somos <a href='https://www.instagram.com/manuu_raw/' target='_blank' class='about-link'>@manuu_raw</a> y <a href='https://www.instagram.com/effe.cinco/' target='_blank' class='about-link'>@effe.cinco</a>, un equipo apasionado por la intersección de tecnología y creatividad. Nos especializamos en el diseño interactivo y la sincronización de láseres, video e iluminación, combinando nuestras habilidades para crear experiencias audiovisuales únicas e inmersivas."
+                        data-en="We are <a href='https://www.instagram.com/manuu_raw/' target='_blank' class='about-link'>@manuu_raw</a> & <a href='https://www.instagram.com/effe.cinco/' target='_blank' class='about-link'>@effe.cinco</a>, a team passionate about the intersection of technology and creativity. We specialize in interactive design and laser, video, and lighting synchronization, combining our skills to create unique and immersive audiovisual experiences.">
+                        Somos <a href="https://www.instagram.com/manuu_raw/" target="_blank" class="about-link">@manuu_raw</a> y <a href="https://www.instagram.com/effe.cinco/" target="_blank" class="about-link">@effe.cinco</a>, un equipo apasionado por la intersección de tecnología y
+                        creatividad. Nos especializamos en el diseño interactivo y la sincronización de láseres, video e
+                        iluminación, combinando nuestras habilidades para crear experiencias audiovisuales únicas e
+                        inmersivas.
+                    </p>
+                </div>
+
+                <div class="about-grid">
+                    <div class="about-block" data-reveal>
+                        <h3 class="about-sub-title" data-es="Nuestra Filosofía" data-en="Our Philosophy">Nuestra
+                            Filosofía</h3>
+                        <p data-es="En nuestro estudio, nos impulsa a la exploración constante de nuevas formas de integrar la tecnología con la creatividad. Cada proyecto es un laboratorio donde experimentamos con técnicas innovadoras y desafiamos nuestros límites, transformando espacios y momentos en experiencias que conectan con las emociones y el entorno."
+                            data-en="In our studio, we are driven by the constant exploration of new ways to integrate technology with creativity. Each project is a lab where we experiment with innovative techniques and challenge our limits, transforming spaces and moments into experiences that connect with emotions and environment.">
+                            En nuestro estudio, nos impulsa a la exploración constante de nuevas formas de integrar la
+                            tecnología con la creatividad. Cada proyecto es un laboratorio donde experimentamos con
+                            técnicas innovadoras y desafiamos nuestros límites, transformando espacios y momentos en
+                            experiencias que conectan con las emociones y el entorno.
+                        </p>
+                    </div>
+
+                    <div class="about-members">
+                        <div class="member-card" data-reveal>
+                            <div class="tech-label">ID: DS4-1774822-5</div>
+                            <h3 class="member-name">EFFE.CINCO</h3>
+                            <p class="member-bio"
+                                data-es="Facundo Marrazzo se desempeña como VJ y Artista visual, especializado en arte generativo y en la creación de experiencias audiovisuales interactivas. Su enfoque se centra en explorar nuevos medios y la tecnología, experimentando con materiales fluidos audio-reactivos y objetos 3D filosos y refractivos generados en tiempo real. Utiliza herramientas como TouchDesigner, Fotogrametria, Stable Diffusion, Depence, Madmapper, Ableton Live y Kinect, así como otros sensores, para intervenir los espacios y hacerlos interactivos."
+                                data-en="Facundo Marrazzo is a VJ and Visual Artist, specialized in generative art and the creation of interactive audiovisual experiences. His focus is on exploring new media and technology, experimenting with fluid audio-reactive materials and sharp, refractive 3D objects generated in real-time. He uses tools like TouchDesigner, Photogrammetry, Stable Diffusion, Depence, Madmapper, Ableton Live, and Kinect, as well as other sensors, to intervene spaces and make them interactive.">
+                                Facundo Marrazzo se desempeña como VJ y Artista visual, especializado en arte generativo
+                                y en la creación de experiencias audiovisuales interactivas. Su enfoque se centra en
+                                explorar nuevos medios y la tecnología, experimentando con materiales fluidos
+                                audio-reactivos y objetos 3D filosos y refractivos generados en tiempo real. Utiliza
+                                herramientas como TouchDesigner, Fotogrametria, Stable Diffusion, Depence, Madmapper,
+                                Ableton Live y Kinect, así como otros sensores, para intervenir los espacios y hacerlos
+                                interactivos.
+                            </p>
+                        </div>
+
+                        <div class="member-card" data-reveal>
+                            <div class="tech-label">ID: DS4-481508-F</div>
+                            <h3 class="member-name">MANUU_RAW</h3>
+                            <p class="member-bio"
+                                data-es="Manuel Benavidez también conocido como Manu Raw es artista multimedia, Vj y técnico audiovisual. Su enfoque artístico se basa en el uso innovador del programa TouchDesigner, tanto como recurso estético como herramienta fundamental para la creación de sus obras y para la sincronización de elementos visuales y lummnicos. Su área de interés abarca el diseño, iluminación y técnica de shows y presentaciones artísticas, destacándose por su habilidad para fusionar estos elementos de manera creativa."
+                                data-en="Manuel Benavidez, also known as Manu Raw, is a multimedia artist, VJ, and audiovisual technician. His artistic approach is based on the innovative use of TouchDesigner, both as an aesthetic resource and a fundamental tool for creating his works and synchronizing visual and lighting elements. His area of interest includes design, lighting, and show production for artistic presentations, standing out for his ability to creatively fuse these elements.">
+                                Manuel Benavidez también conocido como Manu Raw es artista multimedia, Vj y técnico
+                                audiovisual. Su enfoque artístico se basa en el uso innovador del programa
+                                TouchDesigner, tanto como recurso estético como herramienta fundamental para la creación
+                                de sus obras y para la sincronización de elementos visuales y lummnicos. Su área de
+                                interés abarca el diseño, iluminación y técnica de shows y presentaciones artísticas,
+                                destacándose por su habilidad para fusionar estos elementos de manera creativa.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Stats Only -->
+                    <div class="about-footer-info" data-reveal>
+                        <div class="about-stats">
+                            <div class="stat-item"><span class="stat-number" data-count="12">0</span><span
+                                    class="stat-label">PROJECTS</span></div>
+                            <div class="stat-item"><span class="stat-number" data-count="48">0</span><span
+                                    class="stat-label">ARTISTS</span></div>
+                            <div class="stat-item"><span class="stat-number" data-count="35">0</span><span
+                                    class="stat-label">COLLABS</span></div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <!-- Shop Section -->
+        <section class="shop" id="shop">
+            <div class="section-header" data-reveal>
+                <span class="section-number">03</span>
+                <h2 class="section-title" data-es="TIENDA" data-en="SHOP">TIENDA</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="patreon-notice" data-reveal>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14.82 2.41C18.78 2.41 22 5.65 22 9.62c0 3.96-3.22 7.19-7.18 7.19-3.95 0-7.17-3.23-7.17-7.19 0-3.97 3.22-7.21 7.17-7.21M2 21.6h3.5V2.41H2V21.6z"/></svg>
+                <span data-es="Contenido disponible para miembros de Patreon" data-en="Content available for Patreon members">Contenido disponible para miembros de Patreon</span>
+                <a href="https://www.patreon.com/c/effecinco" target="_blank" rel="noopener" class="patreon-link" data-es="UNIRSE" data-en="JOIN">UNIRSE</a>
+            </div>
+
+            <div class="shop-grid">
+                <!-- Option $15 -->
+                <div class="shop-card" data-reveal>
+                    <div class="shop-preview">
+                        <img src="assets/shop/pack_01-min.png" alt="Essentials Pack">
+                    </div>
+                    <div class="shop-card-info">
+                        <span class="shop-tag">VJ PACK</span>
+                        <h3 class="shop-item-title">ESSENTIALS</h3>
+                        <p data-es="Loops limpios, geométricos y minimalistas. El corazón de Distorxion."
+                            data-en="Clean, geometric, minimalist loops. The heart of Distorxion.">Loops limpios,
+                            geométricos y minimalistas. El corazón de Distorxion.</p>
+                        <div class="shop-card-footer">
+                            <span class="shop-price">USD $15</span>
+                            <a href="https://www.patreon.com/c/effecinco" target="_blank" rel="noopener" class="shop-btn">DOWNLOAD</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option $20 -->
+                <div class="shop-card" data-reveal>
+                    <div class="shop-preview">
+                        <img src="assets/shop/pack_02-min.png" alt="Geometric Pack">
+                    </div>
+                    <div class="shop-card-info">
+                        <span class="shop-tag">VJ PACK</span>
+                        <h3 class="shop-item-title">GEOMETRIC</h3>
+                        <p data-es="Estructuras 3D complejas y profundidad matemática."
+                            data-en="Complex 3D structures and mathematical depth.">Estructuras 3D complejas y
+                            profundidad matemática.</p>
+                        <div class="shop-card-footer">
+                            <span class="shop-price">USD $20</span>
+                            <a href="https://www.patreon.com/c/effecinco" target="_blank" rel="noopener" class="shop-btn">DOWNLOAD</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option $20 -->
+                <div class="shop-card" data-reveal>
+                    <div class="shop-preview">
+                        <img src="assets/shop/pack_03-min.png" alt="Particles Pack">
+                    </div>
+                    <div class="shop-card-info">
+                        <span class="shop-tag">VJ PACK</span>
+                        <h3 class="shop-item-title">PARTICLES</h3>
+                        <p data-es="Sistemas de partículas fluidas y flujos digitales."
+                            data-en="Fluid particle systems and digital flows.">Sistemas de partículas fluidas y flujos
+                            digitales.</p>
+                        <div class="shop-card-footer">
+                            <span class="shop-price">USD $20</span>
+                            <a href="https://www.patreon.com/c/effecinco" target="_blank" rel="noopener" class="shop-btn">DOWNLOAD</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option $25 -->
+                <div class="shop-card" data-reveal>
+                    <div class="shop-preview">
+                        <img src="assets/shop/pack_04-min.png" alt="Liquid Pack">
+                    </div>
+                    <div class="shop-card-info">
+                        <span class="shop-tag">VJ PACK</span>
+                        <h3 class="shop-item-title">LIQUID FLOW</h3>
+                        <p data-es="Simulaciones orgánicas y comportamiento de fluidos."
+                            data-en="Organic simulations and fluid behavior.">Simulaciones orgánicas y comportamiento de
+                            fluidos.</p>
+                        <div class="shop-card-footer">
+                            <span class="shop-price">USD $25</span>
+                            <a href="https://www.patreon.com/c/effecinco" target="_blank" rel="noopener" class="shop-btn">DOWNLOAD</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option $35 -->
+                <div class="shop-card" data-reveal>
+                    <div class="shop-preview">
+                        <img src="assets/shop/pack_05-min.png" alt="Ultimate Pack">
+                    </div>
+                    <div class="shop-card-info">
+                        <span class="shop-tag">MEGA PACK</span>
+                        <h3 class="shop-item-title">ULTIMATE BUNDLE</h3>
+                        <p data-es="Colección completa Distorxion + Bonus content (150+ clips)."
+                            data-en="Full Distorxion collection + Bonus content (150+ clips).">Colección completa
+                            Distorxion + Bonus content (150+ clips).</p>
+                        <div class="shop-card-footer">
+                            <span class="shop-price">USD $35</span>
+                            <a href="https://www.patreon.com/c/effecinco" target="_blank" rel="noopener" class="shop-btn">DOWNLOAD</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option $50 - UI CONTROL -->
+                <div class="shop-card featured" data-reveal>
+                    <div class="shop-preview">
+                        <img src="assets/shop/pack_06-min.png" alt="UI Control Pack">
+                    </div>
+                    <div class="shop-card-info">
+                        <span class="shop-tag">TOUCHDESIGNER</span>
+                        <h3 class="shop-item-title">UI DE CONTROL</h3>
+                        <p data-es="Custom Master Control .TOX para performance live y sincronización."
+                            data-en="Custom Master Control .TOX for live performance and sync.">Custom Master Control
+                            .TOX para performance live y sincronización.</p>
+                        <div class="shop-card-footer">
+                            <span class="shop-price">USD $50</span>
+                            <a href="https://www.patreon.com/c/effecinco" target="_blank" rel="noopener" class="shop-btn">DOWNLOAD</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact/Registration Section -->
+        <section class="contact" id="contact">
+            <div class="section-header" data-reveal>
+                <div class="tech-id">[DEPT_COMM_04]</div>
+                <span class="section-number">04</span>
+                <h2 class="section-title" data-es="REGISTRO / CONTACTO" data-en="REGISTRATION / CONTACT">REGISTRO /
+                    CONTACTO</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="contact-content">
+                <div class="contact-sidebar" data-reveal>
+                    <div class="contact-links">
+                        <div class="contact-link">
+                            <span class="contact-link-label">EMAIL</span>
+                            <a href="mailto:distorxion.contacto@gmail.com"
+                                class="contact-link-value">distorxion.contacto@gmail.com</a>
+                            <div class="tech-barcode"></div>
+                        </div>
+                        <div class="contact-link">
+                            <span class="contact-link-label">INSTAGRAM</span>
+                            <a href="https://www.instagram.com/distorxion___/" target="_blank"
+                                class="contact-link-value">@distorxion___</a>
+                        </div>
+                        <div class="contact-link">
+                            <span class="contact-link-label">YOUTUBE</span>
+                            <a href="https://www.youtube.com/@DISTORXXXION" target="_blank"
+                                class="contact-link-value">@DISTORXXXION</a>
+                        </div>
+                        <div class="contact-link">
+                            <span class="contact-link-label">LOCATION</span>
+                            <span class="contact-link-value">BUENOS AIRES, AR</span>
+                            <div class="tech-tag">DS4-LOGIN-OK</div>
+                        </div>
+                    </div>
+                    <div class="system-status-box">
+                        <div class="status-header">SYSTEM_LOG</div>
+                        <div class="status-body" id="system-log">
+                            <p>> WAITING FOR INPUT...</p>
+                            <p>> ENCRYPTION: ACTIVE</p>
+                            <p>> PROTOCOL: X139</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="contact-form" id="contact-form" data-reveal>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" data-es="NOMBRE COMPLETO" data-en="FULL NAME">NOMBRE
+                                COMPLETO</label>
+                            <input type="text" name="name" placeholder="E.G. JOHN DOE" required>
+                            <div class="form-line"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-es="EMAIL DE CONTACTO" data-en="CONTACT EMAIL">EMAIL DE
+                                CONTACTO</label>
+                            <input type="email" name="email" placeholder="USER@DOMAIN.COM" required>
+                            <div class="form-line"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-es="TIPO DE PROYECTO" data-en="PROJECT TYPE">TIPO DE
+                                PROYECTO</label>
+                            <select name="type" required>
+                                <option value="" disabled selected data-es="SELECCIONAR..." data-en="SELECT...">
+                                    SELECCIONAR...</option>
+                                <option value="visuals" data-es="VISUALES / VJ" data-en="VISUALS / VJ">VISUALES / VJ
+                                </option>
+                                <option value="stage" data-es="DISEÑO DE ESCENARIO" data-en="STAGE DESIGN">DISEÑO DE
+                                    ESCENARIO</option>
+                                <option value="laser" data-es="MAPPING LÁSER" data-en="LASER MAPPING">MAPPING LÁSER
+                                </option>
+                                <option value="lighting" data-es="DISEÑO LUMINICO" data-en="LIGHTING DESIGN">DISEÑO
+                                    LUMINICO</option>
+                                <option value="installation" data-es="INSTALACIÓN INTERACTIVA"
+                                    data-en="INTERACTIVE INSTALLATION">INSTALACIÓN INTERACTIVA</option>
+                                <option value="other" data-es="OTRO" data-en="OTHER">OTRO</option>
+                            </select>
+                            <div class="form-line"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-es="FECHA ESTIMADA" data-en="ESTIMATED DATE">FECHA
+                                ESTIMADA</label>
+                            <input type="date" name="date">
+                            <div class="form-line"></div>
+                        </div>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label" data-es="MENSAJE / BRIEF" data-en="MESSAGE / BRIEF">MENSAJE /
+                            BRIEF</label>
+                        <textarea name="message" placeholder="DESCRIBE TU VISIÓN..." rows="4" required></textarea>
+                        <div class="form-line"></div>
+                    </div>
+                    <div class="form-footer">
+                        <div class="tech-detail-small">S/N 48-1588F | PROTOCOL DRIVER X139</div>
+                        <button type="submit" class="form-submit" data-es="REGISTRAR PROYECTO"
+                            data-en="REGISTER PROJECT">REGISTRAR PROYECTO</button>
+                    </div>
+                    <div class="form-feedback" id="form-feedback"></div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-copy">
+                &copy; 2024 — 2026 DISTORXION — CREATIVE TECH STUDIO
+            </div>
+            <div class="footer-links">
+                <a href="mailto:distorxion.contacto@gmail.com">distorxion.contacto@gmail.com</a>
+                <a href="https://www.instagram.com/distorxion___/" target="_blank">INSTAGRAM</a>
+                <a href="https://www.youtube.com/@DISTORXXXION" target="_blank">YOUTUBE</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Project Modal -->
+    <div class="modal" id="project-modal">
+        <div class="modal-bg" id="modal-close"></div>
+        <div class="modal-content">
+            <button class="modal-close-btn" id="modal-close-btn">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+            </button>
+            <div class="modal-body" id="modal-body">
+                <!-- Content will be injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
