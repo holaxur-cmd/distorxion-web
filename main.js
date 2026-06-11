@@ -152,6 +152,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Project Data
     const projectData = {
+        dubfire_en_amerika_2026: {
+            title: "DUBFIRE",
+            date: "2026",
+            service: "DISEÑO, VISUALES E ILUMINACIÓN",
+            location: "AMERIKA BSAS",
+            media: [
+                "assets/portfolio/dubfire_en_amerika_2026/AMK 2026-min.jpg",
+                "assets/portfolio/dubfire_en_amerika_2026/AMK 2026_4-min.jpg",
+                "assets/portfolio/dubfire_en_amerika_2026/DSC04626-min.jpg",
+                "assets/portfolio/dubfire_en_amerika_2026/DSC04628-min.jpg",
+                "assets/portfolio/dubfire_en_amerika_2026/DSC04964-min.jpg",
+                "assets/portfolio/dubfire_en_amerika_2026/DSC06014-min.jpg",
+                "assets/portfolio/dubfire_en_amerika_2026/DSC06254-min.jpg",
+                "assets/portfolio/dubfire_en_amerika_2026/DSC06258-min.jpg",
+                "assets/portfolio/dubfire_en_amerika_2026/DSC06765-min.jpg",
+                "assets/portfolio/dubfire_en_amerika_2026/DSC07306-min.jpg",
+                "assets/portfolio/dubfire_en_amerika_2026/DSC07469-min.jpg",
+                "assets/portfolio/dubfire_en_amerika_2026/DF6F-min.mp4",
+                "assets/portfolio/dubfire_en_amerika_2026/DF7F-min.mp4",
+                "assets/portfolio/dubfire_en_amerika_2026/VID-20260511-WA0026-min.mp4"
+            ]
+        },
         john_digweed: {
             title: "JOHN DIGWEED | MARTIN GARCIA",
             date: "2025",
@@ -173,12 +195,17 @@ document.addEventListener('DOMContentLoaded', () => {
             service: "LASER PERFORMANCE, LIVE AUDIO",
             location: "DESEO BSAS",
             media: [
-                "assets/portfolio/mutek_argentina/C1799_02838524-min.mp4",
-                "assets/portfolio/mutek_argentina/C1825_02858924-min.mp4",
-                "assets/portfolio/mutek_argentina/C1845_02872772-min.mp4",
+                "assets/portfolio/mutek_argentina/DISTORXION_MUTEK_04102025_@mirulucena-17-min.jpg",
+                "assets/portfolio/mutek_argentina/DISTORXION_MUTEK_04102025_@mirulucena-32-min.jpg",
+                "assets/portfolio/mutek_argentina/DISTORXION_MUTEK_04102025_@mirulucena-5-min.jpg",
+                "assets/portfolio/mutek_argentina/DSC00018-min.jpg",
+                "assets/portfolio/mutek_argentina/DSC09722-min.jpg",
                 "assets/portfolio/mutek_argentina/DSC09796-min.jpg",
                 "assets/portfolio/mutek_argentina/mutek_1-min.jpg",
-                "assets/portfolio/mutek_argentina/utopia_1-min.jpg"
+                "assets/portfolio/mutek_argentina/utopia_1-min.jpg",
+                "assets/portfolio/mutek_argentina/C1799_02838524-min.mp4",
+                "assets/portfolio/mutek_argentina/C1825_02858924-min.mp4",
+                "assets/portfolio/mutek_argentina/C1845_02872772-min.mp4"
             ]
         },
         comite_357_mutek: {

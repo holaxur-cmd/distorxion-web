@@ -1031,6 +1031,11 @@ section.active {
     min-height: 80vh;
 }
 
+.moodboard::after {
+    content: '';
+    flex: 0 0 1px;
+}
+
 .moodboard::-webkit-scrollbar {
     display: none;
 }
